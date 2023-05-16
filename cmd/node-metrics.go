@@ -33,6 +33,8 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/kubeservice-stack/node-metrics/pkg/collector"
+	"github.com/kubeservice-stack/node-metrics/pkg/config"
+	"github.com/kubeservice-stack/node-metrics/pkg/schedule"
 	"github.com/prometheus/client_golang/prometheus"
 	promcollectors "github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -170,6 +172,12 @@ func main() {
 	)
 
 	promlogConfig := &promlog.Config{}
+
+	cfg := config.DefaultConfig()
+	schedule.InitDataStorage(cfg)
+	schedule.StartCPU(cfg)
+	schedule.StartMemory(cfg)
+
 	flag.AddFlags(kingpin.CommandLine, promlogConfig)
 	kingpin.Version(version.Print("node_metrics"))
 	kingpin.CommandLine.UsageWriter(os.Stdout)

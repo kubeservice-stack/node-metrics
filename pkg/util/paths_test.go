@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package collector
+package util
 
 import (
 	"testing"
@@ -25,11 +25,11 @@ func TestDefaultProcPath(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if got, want := procFilePath("somefile"), "/proc/somefile"; got != want {
+	if got, want := ProcFilePath("somefile"), "/proc/somefile"; got != want {
 		t.Errorf("Expected: %s, Got: %s", want, got)
 	}
 
-	if got, want := procFilePath("some/file"), "/proc/some/file"; got != want {
+	if got, want := ProcFilePath("some/file"), "/proc/some/file"; got != want {
 		t.Errorf("Expected: %s, Got: %s", want, got)
 	}
 }
@@ -39,11 +39,11 @@ func TestCustomProcPath(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if got, want := procFilePath("somefile"), "../some/place/somefile"; got != want {
+	if got, want := ProcFilePath("somefile"), "../some/place/somefile"; got != want {
 		t.Errorf("Expected: %s, Got: %s", want, got)
 	}
 
-	if got, want := procFilePath("some/file"), "../some/place/some/file"; got != want {
+	if got, want := ProcFilePath("some/file"), "../some/place/some/file"; got != want {
 		t.Errorf("Expected: %s, Got: %s", want, got)
 	}
 }
@@ -53,11 +53,11 @@ func TestDefaultSysPath(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if got, want := sysFilePath("somefile"), "/sys/somefile"; got != want {
+	if got, want := SysFilePath("somefile"), "/sys/somefile"; got != want {
 		t.Errorf("Expected: %s, Got: %s", want, got)
 	}
 
-	if got, want := sysFilePath("some/file"), "/sys/some/file"; got != want {
+	if got, want := SysFilePath("some/file"), "/sys/some/file"; got != want {
 		t.Errorf("Expected: %s, Got: %s", want, got)
 	}
 }
@@ -67,11 +67,11 @@ func TestCustomSysPath(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if got, want := sysFilePath("somefile"), "../some/place/somefile"; got != want {
+	if got, want := SysFilePath("somefile"), "../some/place/somefile"; got != want {
 		t.Errorf("Expected: %s, Got: %s", want, got)
 	}
 
-	if got, want := sysFilePath("some/file"), "../some/place/some/file"; got != want {
+	if got, want := SysFilePath("some/file"), "../some/place/some/file"; got != want {
 		t.Errorf("Expected: %s, Got: %s", want, got)
 	}
 }

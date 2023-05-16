@@ -27,6 +27,7 @@ import (
 	"github.com/alecthomas/kingpin/v2"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
+	"github.com/kubeservice-stack/node-metrics/pkg/util"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/procfs"
 	"github.com/prometheus/procfs/sysfs"
@@ -70,7 +71,7 @@ func init() {
 
 // NewCPUCollector returns a new Collector exposing kernel/system statistics.
 func NewCPUCollector(logger log.Logger) (Collector, error) {
-	fs, err := procfs.NewFS(*procPath)
+	fs, err := procfs.NewFS(*util.ProcPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open procfs: %w", err)
 	}

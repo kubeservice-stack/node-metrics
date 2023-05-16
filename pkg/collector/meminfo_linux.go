@@ -24,6 +24,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/kubeservice-stack/node-metrics/pkg/util"
 )
 
 var (
@@ -31,7 +33,7 @@ var (
 )
 
 func (c *meminfoCollector) getMemInfo() (map[string]float64, error) {
-	file, err := os.Open(procFilePath("meminfo"))
+	file, err := os.Open(util.ProcFilePath("meminfo"))
 	if err != nil {
 		return nil, err
 	}
