@@ -84,7 +84,7 @@ func getMemInfoNuma() ([]meminfoMetric, error) {
 		metrics []meminfoMetric
 	)
 
-	nodes, err := filepath.Glob(sysFilePath("devices/system/node/node[0-9]*"))
+	nodes, err := filepath.Glob(util.SysFilePath("devices/system/node/node[0-9]*"))
 	if err != nil {
 		return nil, err
 	}

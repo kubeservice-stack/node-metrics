@@ -76,7 +76,7 @@ func NewCPUCollector(logger log.Logger) (Collector, error) {
 		return nil, fmt.Errorf("failed to open procfs: %w", err)
 	}
 
-	sysfs, err := sysfs.NewFS(*sysPath)
+	sysfs, err := sysfs.NewFS(*util.SysPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open sysfs: %w", err)
 	}
@@ -231,7 +231,7 @@ func updateFieldInfo(valueList []string, filter *regexp.Regexp, desc *prometheus
 
 // updateThermalThrottle reads /sys/devices/system/cpu/cpu* and expose thermal throttle statistics.
 func (c *cpuCollector) updateThermalThrottle(ch chan<- prometheus.Metric) error {
-	cpus, err := filepath.Glob(sysFilePath("devices/system/cpu/cpu[0-9]*"))
+	cpus, err := filepath.Glob(util.SysFilePath("devices/system/cpu/cpu[0-9]*"))
 	if err != nil {
 		return err
 	}
