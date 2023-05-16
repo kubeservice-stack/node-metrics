@@ -27,6 +27,7 @@ import (
 	"strings"
 
 	"github.com/go-kit/log"
+	"github.com/kubeservice-stack/node-metrics/pkg/util"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
