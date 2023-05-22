@@ -55,3 +55,28 @@ func InitDataStorage(cfg config.Config) {
 		panic("init nodeMemoryDataStorage error")
 	}
 }
+
+func CloseDataStorage() {
+	if nodeCPURawDataStorage != nil {
+		nodeCPURawDataStorage.Close()
+	}
+	if nodeMemoryDataStorage != nil {
+		nodeMemoryDataStorage.Close()
+	}
+}
+
+func NodeCPUSecondsSchedule() *sched.Scheduler {
+	return nodeCPUSecondsSchedule
+}
+
+func NodeMemorySecondsSchedule() *sched.Scheduler {
+	return nodeMemorySecondsSchedule
+}
+
+func NodeCPURawDataStorage() storage.StorageInterface {
+	return nodeCPURawDataStorage
+}
+
+func NodeMemoryDataStorage() storage.StorageInterface {
+	return nodeMemoryDataStorage
+}

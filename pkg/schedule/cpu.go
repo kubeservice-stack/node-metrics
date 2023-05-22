@@ -1,5 +1,5 @@
-//go:build !nomeminfo
-// +build !nomeminfo
+//go:build !nocpu
+// +build !nocpu
 
 /*
 Copyright 2023 The KubeService-Stack Authors.
@@ -44,7 +44,7 @@ func CPUInfo() (float64, error) {
 		stat.CPUTotal.Iowait + stat.CPUTotal.IRQ + stat.CPUTotal.Nice + stat.CPUTotal.SoftIRQ +
 		stat.CPUTotal.Steal + stat.CPUTotal.Steal + stat.CPUTotal.System + stat.CPUTotal.User
 	if total > 0.0 {
-		return 1 - stat.CPUTotal.Idle/total, nil
+		return (1 - stat.CPUTotal.Idle/total) * 100, nil
 	}
 
 	return 0.0, fmt.Errorf("failed to get cpu, all cpu total == 0 ")

@@ -177,6 +177,9 @@ func main() {
 	schedule.InitDataStorage(cfg)
 	schedule.StartCPU(cfg)
 	schedule.StartMemory(cfg)
+	defer {
+		schedule.CloseDataStorage()
+	}
 
 	flag.AddFlags(kingpin.CommandLine, promlogConfig)
 	kingpin.Version(version.Print("node_metrics"))
