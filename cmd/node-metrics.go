@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	stdlog "log"
 	"net/http"
@@ -54,6 +55,21 @@ type handler struct {
 	includeExporterMetrics  bool
 	maxRequests             int
 	logger                  log.Logger
+}
+
+func newstatisticsHandler(w http.ResponseWriter, r *http.Request) {
+	load, err := collector.GetData()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "%s", err)
+	}
+	by, err := json.Marshal(load)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "%s", err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(by)
 }
 
 func newHandler(includeExporterMetrics bool, maxRequests int, logger log.Logger) *handler {
@@ -153,6 +169,10 @@ func main() {
 			"web.telemetry-path",
 			"Path under which to expose metrics.",
 		).Default("/metrics").String()
+		statisticsPath = kingpin.Flag(
+			"web.statistics-path",
+			"Path under which to expose statistics.",
+		).Default("/statistics").String()
 		disableExporterMetrics = kingpin.Flag(
 			"web.disable-exporter-metrics",
 			"Exclude metrics about the exporter itself (promhttp_*, process_*, go_*).",
@@ -198,15 +218,20 @@ func main() {
 	level.Debug(logger).Log("msg", "Go MAXPROCS", "procs", runtime.GOMAXPROCS(0))
 
 	http.Handle(*metricsPath, newHandler(!*disableExporterMetrics, *maxRequests, logger))
+	http.HandleFunc(*statisticsPath, newstatisticsHandler)
 	if *metricsPath != "/" {
 		landingConfig := web.LandingConfig{
-			Name:        "Node Exporter",
-			Description: "Prometheus Node Exporter",
+			Name:        "Node Metrics",
+			Description: "Prometheus Node Metrics",
 			Version:     version.Info(),
 			Links: []web.LandingLinks{
 				{
 					Address: *metricsPath,
 					Text:    "Metrics",
+				},
+				{
+					Address: *statisticsPath,
+					Text:    "Statistics",
 				},
 			},
 		}

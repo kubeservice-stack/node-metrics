@@ -123,3 +123,7 @@ func getData() (map[string]float64, error) {
 	loads["mem_usage_max_avg_1d"] = mem_usage_max_avg_1d
 	return loads, nil
 }
+
+func GetData() (map[string]float64, error) {
+	return getData()
+}
