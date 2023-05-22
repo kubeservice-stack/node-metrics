@@ -31,6 +31,10 @@ type BaseCollector struct {
 	logger log.Logger
 }
 
+func init() {
+	registerCollector("base", defaultEnabled, NewBaseCollector)
+}
+
 // NewBaseCollector returns a new Collector exposing base average stats.
 func NewBaseCollector(logger log.Logger) (Collector, error) {
 	return &BaseCollector{
