@@ -25,7 +25,7 @@ import (
 
 func memMeanData(num int64) (float64, error) {
 	now := time.Now()
-	data, err := schedule.NodeCPURawDataStorage().Select("mem_usage_active", nil, now.Unix()-num, now.Unix())
+	data, err := schedule.NodeMemoryDataStorage().Select("mem_usage_active", nil, now.Unix()-num, now.Unix())
 	if err != nil {
 		return 0.0, err
 	}
@@ -36,7 +36,7 @@ func memMeanData(num int64) (float64, error) {
 
 func memMaxData(num int64) (float64, error) {
 	now := time.Now()
-	data, err := schedule.NodeCPURawDataStorage().Select("mem_usage_active", nil, now.Unix()-num, now.Unix())
+	data, err := schedule.NodeMemoryDataStorage().Select("mem_usage_active", nil, now.Unix()-num, now.Unix())
 	if err != nil {
 		return 0.0, err
 	}
