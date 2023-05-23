@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: node-metrics
+  name: node-metrics
+  namespace: crane-system
+spec:
+  selector:
+    matchLabels:
+      app: node-metrics
+  template:
+    metadata:
+      labels:
+        app: node-metrics
+    spec:
+      containers:
+      - image: dongjiang1989/node-metrics:latest
+        name: node-metrics
+        args:
+        - --web.listen-address=0.0.0.0:19101
+        resources:
+          limits:
+            cpu: 102m
+            memory: 180Mi
+          requests:
+            cpu: 102m
+            memory: 180Mi
+      hostNetwork: true
+      hostPID: true
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
