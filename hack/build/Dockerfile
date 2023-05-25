@@ -17,7 +17,7 @@ COPY vendor/ vendor/
 RUN go build -o node-metrics ./cmd/node-metrics.go
 
 
-FROM alpine:3.17.3
+FROM alpine:latest
 
 WORKDIR /
 COPY --from=builder /workspace/node-metrics .
