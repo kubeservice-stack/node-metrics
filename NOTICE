@@ -1,4 +1,4 @@
-node-metrics base on node_exporter
+node-metrics collector package base on node_exporter
 
 node_exporter
 https://github.com/prometheus/node_exporter
