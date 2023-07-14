@@ -1,0 +1,7 @@
+node-metrics collector package base on node_exporter
+
+node_exporter
+https://github.com/prometheus/node_exporter
+Configurable modular Prometheus exporter for various node metrics.
+Copyright 2013-2015 The Prometheus Authors
+Licensed under the Apache License 2.0
