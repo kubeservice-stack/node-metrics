@@ -206,6 +206,12 @@ func main() {
 	kingpin.Parse()
 	logger := promlog.New(promlogConfig)
 
+	err := web.Validate(*toolkitFlags.WebConfigFile)
+	if err != nil {
+		level.Error(logger).Log("msg", "Unable to validate web configuration file", "err", err)
+		os.Exit(1)
+	}
+
 	if *disableDefaultCollectors {
 		collector.DisableDefaultCollectors()
 	}
