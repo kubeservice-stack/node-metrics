@@ -29,30 +29,38 @@ import (
 	"github.com/prometheus/procfs"
 )
 
-func CPUInfo() (float64, error) {
+func CPUInfo(oldTotal, oldIdle float64) (float64, float64, float64, error) {
 	fs, err := procfs.NewFS(*util.ProcPath)
 	if err != nil {
-		return 0.0, fmt.Errorf("failed to open procfs: %w", err)
+		return 0.0, oldTotal, oldIdle, fmt.Errorf("failed to open procfs: %w", err)
 	}
 
 	stat, err := fs.Stat()
 	if err != nil {
-		return 0.0, fmt.Errorf("failed to get /proc/stat: %w", err)
+		return 0.0, oldTotal, oldIdle, fmt.Errorf("failed to get /proc/stat: %w", err)
 	}
-
-	total := stat.CPUTotal.Guest + stat.CPUTotal.GuestNice + stat.CPUTotal.Idle +
+	newTotal := stat.CPUTotal.Guest + stat.CPUTotal.GuestNice + stat.CPUTotal.Idle +
 		stat.CPUTotal.Iowait + stat.CPUTotal.IRQ + stat.CPUTotal.Nice + stat.CPUTotal.SoftIRQ +
 		stat.CPUTotal.Steal + stat.CPUTotal.Steal + stat.CPUTotal.System + stat.CPUTotal.User
-	if total > 0.0 {
-		return (1 - stat.CPUTotal.Idle/total) * 100, nil
+	total := newTotal - oldTotal
+	idle := stat.CPUTotal.Idle - oldIdle
+	if total > 0.0 && idle > 0.0 {
+		return (1 - idle/total) * 100, newTotal, stat.CPUTotal.Idle, nil
 	}
 
-	return 0.0, fmt.Errorf("failed to get cpu, all cpu total == 0 ")
+	return 0.0, newTotal, stat.CPUTotal.Idle, fmt.Errorf("failed to get cpu, all cpu total == 0 ")
 }
+
+var (
+	OldTotal float64 = 0.0
+	OldIdle  float64 = 0.0
+)
 
 func StorageCPUPoint() {
 	t := time.Now().Unix()
-	v, err := CPUInfo()
+	v, oldTotal, oldIdle, err := CPUInfo(OldTotal, OldIdle)
+	OldTotal = oldTotal
+	OldIdle = oldIdle
 	if err == nil {
 		nodeCPURawDataStorage.InsertRows(
 			[]storage.Row{
