@@ -1,4 +1,4 @@
-FROM golang:1.18.5-alpine as builder
+FROM golang:1.18.5-alpine AS builder
 
 RUN apk add --no-cache gcc musl-dev libc6-compat build-base libc-dev
 
