@@ -3,7 +3,7 @@ module github.com/kubeservice-stack/node-metrics
 go 1.19
 
 require (
-	github.com/alecthomas/kingpin/v2 v2.3.2
+	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/go-kit/log v0.2.1
 	github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973
 	github.com/kubeservice-stack/common v1.2.0
