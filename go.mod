@@ -3,7 +3,7 @@ module github.com/kubeservice-stack/node-metrics
 go 1.19
 
 require (
-	github.com/alecthomas/kingpin/v2 v2.3.2
+	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/go-kit/log v0.2.1
 	github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973
 	github.com/kubeservice-stack/common v1.2.0
@@ -11,11 +11,11 @@ require (
 	github.com/prometheus/client_golang v1.15.1
 	github.com/prometheus/common v0.42.0
 	github.com/prometheus/exporter-toolkit v0.10.0
-	github.com/prometheus/procfs v0.9.0
+	github.com/prometheus/procfs v0.15.1
 	github.com/stretchr/testify v1.8.2
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
 	golang.org/x/sys v0.29.0
-	howett.net/plist v1.0.0
+	howett.net/plist v1.0.1
 )
 
 require (
@@ -42,7 +42,7 @@ require (
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.19.1 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/oauth2 v0.6.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
