@@ -15,7 +15,7 @@ require (
 	github.com/stretchr/testify v1.8.2
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
 	golang.org/x/sys v0.28.0
-	howett.net/plist v1.0.0
+	howett.net/plist v1.0.1
 )
 
 require (
