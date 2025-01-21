@@ -12,7 +12,7 @@ require (
 	github.com/prometheus/common v0.42.0
 	github.com/prometheus/exporter-toolkit v0.10.0
 	github.com/prometheus/procfs v0.15.1
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.10.0
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
 	golang.org/x/sys v0.29.0
 	howett.net/plist v1.0.1
