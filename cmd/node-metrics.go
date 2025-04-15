@@ -105,9 +105,9 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// To serve filtered metrics, we create a filtering handler on the fly.
 	filteredHandler, err := h.innerHandler(filters...)
 	if err != nil {
-		h.logger.Warn("Couldn't create filtered metrics handler:", "err", err)
+		h.logger.Warn("Couldn't create filtered metrics handler:", "err", err.Error())
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Couldn't create filtered metrics handler: %s", err)
+		fmt.Fprintf(w, "Couldn't create filtered metrics handler: %s", err.Error())
 		return
 	}
 	filteredHandler.ServeHTTP(w, r)
@@ -207,7 +207,7 @@ func main() {
 
 	err := web.Validate(*toolkitFlags.WebConfigFile)
 	if err != nil {
-		logger.Error("Unable to validate web configuration file", "err", err)
+		logger.Error("Unable to validate web configuration file", "err", err.Error())
 		os.Exit(1)
 	}
 
