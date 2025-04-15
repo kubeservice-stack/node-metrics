@@ -48,7 +48,7 @@ func (t Timestamp) Equal(u Timestamp) bool {
 	return t.Time.Equal(u.Time)
 }
 
-//ms
+// ms
 func RandSleep(max, min int) {
 	if min <= 0 {
 		min = 5
@@ -58,7 +58,6 @@ func RandSleep(max, min int) {
 	}
 	t := time.Duration(rand.Intn(max-min) + min)
 	time.Sleep(t * time.Millisecond)
-
 }
 
 func ToTime(str string) (time.Time, error) {

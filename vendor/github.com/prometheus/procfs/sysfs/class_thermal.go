@@ -23,6 +23,8 @@ import (
 	"strings"
 	"syscall"
 
+	fsp "io/fs"
+
 	"github.com/prometheus/procfs/internal/util"
 )
 
@@ -49,7 +51,7 @@ func (fs FS) ClassThermalZoneStats() ([]ClassThermalZoneStats, error) {
 	for _, zone := range zones {
 		zoneStats, err := parseClassThermalZone(zone)
 		if err != nil {
-			if errors.Is(err, syscall.ENODATA) {
+			if errors.Is(err, syscall.ENODATA) || errors.As(err, new(*fsp.PathError)) {
 				continue
 			}
 			return nil, err

@@ -18,14 +18,17 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
 
 	"github.com/coreos/go-systemd/v22/activation"
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
+	"github.com/mdlayher/vsock"
 	config_util "github.com/prometheus/common/config"
 	"golang.org/x/sync/errgroup"
 	"gopkg.in/yaml.v2"
@@ -43,16 +46,19 @@ type Config struct {
 }
 
 type TLSConfig struct {
-	TLSCertPath              string     `yaml:"cert_file"`
-	TLSKeyPath               string     `yaml:"key_file"`
-	ClientAuth               string     `yaml:"client_auth_type"`
-	ClientCAs                string     `yaml:"client_ca_file"`
-	CipherSuites             []Cipher   `yaml:"cipher_suites"`
-	CurvePreferences         []Curve    `yaml:"curve_preferences"`
-	MinVersion               TLSVersion `yaml:"min_version"`
-	MaxVersion               TLSVersion `yaml:"max_version"`
-	PreferServerCipherSuites bool       `yaml:"prefer_server_cipher_suites"`
-	ClientAllowedSans        []string   `yaml:"client_allowed_sans"`
+	TLSCert                  string             `yaml:"cert"`
+	TLSKey                   config_util.Secret `yaml:"key"`
+	ClientCAsText            string             `yaml:"client_ca"`
+	TLSCertPath              string             `yaml:"cert_file"`
+	TLSKeyPath               string             `yaml:"key_file"`
+	ClientAuth               string             `yaml:"client_auth_type"`
+	ClientCAs                string             `yaml:"client_ca_file"`
+	CipherSuites             []Cipher           `yaml:"cipher_suites"`
+	CurvePreferences         []Curve            `yaml:"curve_preferences"`
+	MinVersion               TLSVersion         `yaml:"min_version"`
+	MaxVersion               TLSVersion         `yaml:"max_version"`
+	PreferServerCipherSuites bool               `yaml:"prefer_server_cipher_suites"`
+	ClientAllowedSans        []string           `yaml:"client_allowed_sans"`
 }
 
 type FlagConfig struct {
@@ -132,22 +138,54 @@ func getTLSConfig(configPath string) (*tls.Config, error) {
 	return ConfigToTLSConfig(&c.TLSConfig)
 }
 
+func validateTLSPaths(c *TLSConfig) error {
+	if c.TLSCertPath == "" && c.TLSCert == "" &&
+		c.TLSKeyPath == "" && c.TLSKey == "" &&
+		c.ClientCAs == "" && c.ClientCAsText == "" &&
+		c.ClientAuth == "" {
+		return errNoTLSConfig
+	}
+
+	if c.TLSCertPath == "" && c.TLSCert == "" {
+		return errors.New("missing one of cert or cert_file")
+	}
+
+	if c.TLSKeyPath == "" && c.TLSKey == "" {
+		return errors.New("missing one of key or key_file")
+	}
+
+	return nil
+}
+
 // ConfigToTLSConfig generates the golang tls.Config from the TLSConfig struct.
 func ConfigToTLSConfig(c *TLSConfig) (*tls.Config, error) {
-	if c.TLSCertPath == "" && c.TLSKeyPath == "" && c.ClientAuth == "" && c.ClientCAs == "" {
-		return nil, errNoTLSConfig
-	}
-
-	if c.TLSCertPath == "" {
-		return nil, errors.New("missing cert_file")
-	}
-
-	if c.TLSKeyPath == "" {
-		return nil, errors.New("missing key_file")
+	if err := validateTLSPaths(c); err != nil {
+		return nil, err
 	}
 
 	loadCert := func() (*tls.Certificate, error) {
-		cert, err := tls.LoadX509KeyPair(c.TLSCertPath, c.TLSKeyPath)
+		var certData, keyData []byte
+		var err error
+
+		if c.TLSCertPath != "" {
+			certData, err = os.ReadFile(c.TLSCertPath)
+			if err != nil {
+				return nil, fmt.Errorf("failed to read cert_file (%s): %s", c.TLSCertPath, err)
+			}
+		} else {
+			certData = []byte(c.TLSCert)
+		}
+
+		if c.TLSKeyPath != "" {
+			keyData, err = os.ReadFile(c.TLSKeyPath)
+			if err != nil {
+				return nil, fmt.Errorf("failed to read key_file (%s): %s", c.TLSKeyPath, err)
+			}
+		} else {
+			keyData = []byte(c.TLSKey)
+		}
+
+		cert, err := tls.X509KeyPair(certData, keyData)
 		if err != nil {
 			return nil, fmt.Errorf("failed to load X509KeyPair: %w", err)
 		}
@@ -193,6 +231,10 @@ func ConfigToTLSConfig(c *TLSConfig) (*tls.Config, error) {
 		}
 		clientCAPool.AppendCertsFromPEM(clientCAFile)
 		cfg.ClientCAs = clientCAPool
+	} else if c.ClientCAsText != "" {
+		clientCAPool := x509.NewCertPool()
+		clientCAPool.AppendCertsFromPEM([]byte(c.ClientCAsText))
+		cfg.ClientCAs = clientCAPool
 	}
 
 	if c.ClientAllowedSans != nil {
@@ -215,7 +257,7 @@ func ConfigToTLSConfig(c *TLSConfig) (*tls.Config, error) {
 		return nil, errors.New("Invalid ClientAuth: " + c.ClientAuth)
 	}
 
-	if c.ClientCAs != "" && cfg.ClientAuth == tls.NoClientCert {
+	if (c.ClientCAs != "" || c.ClientCAsText != "") && cfg.ClientAuth == tls.NoClientCert {
 		return nil, errors.New("Client CA's have been configured without a Client Auth Policy")
 	}
 
@@ -224,7 +266,7 @@ func ConfigToTLSConfig(c *TLSConfig) (*tls.Config, error) {
 
 // ServeMultiple starts the server on the given listeners. The FlagConfig is
 // also passed on to Serve.
-func ServeMultiple(listeners []net.Listener, server *http.Server, flags *FlagConfig, logger log.Logger) error {
+func ServeMultiple(listeners []net.Listener, server *http.Server, flags *FlagConfig, logger *slog.Logger) error {
 	errs := new(errgroup.Group)
 	for _, l := range listeners {
 		l := l
@@ -236,16 +278,18 @@ func ServeMultiple(listeners []net.Listener, server *http.Server, flags *FlagCon
 }
 
 // ListenAndServe starts the server on addresses given in WebListenAddresses in
-// the FlagConfig or instead uses systemd socket activated listeners if
-// WebSystemdSocket in the FlagConfig is true. The FlagConfig is also passed on
-// to ServeMultiple.
-func ListenAndServe(server *http.Server, flags *FlagConfig, logger log.Logger) error {
+// the FlagConfig. When address starts looks like vsock://:{port}, it listens on
+// vsock. More info check https://wiki.qemu.org/Features/VirtioVsock .
+// Or instead uses systemd socket activated listeners if WebSystemdSocket in the
+// FlagConfig is true.
+// The FlagConfig is also passed on to ServeMultiple.
+func ListenAndServe(server *http.Server, flags *FlagConfig, logger *slog.Logger) error {
 	if flags.WebSystemdSocket == nil && (flags.WebListenAddresses == nil || len(*flags.WebListenAddresses) == 0) {
 		return ErrNoListeners
 	}
 
 	if flags.WebSystemdSocket != nil && *flags.WebSystemdSocket {
-		level.Info(logger).Log("msg", "Listening on systemd activated listeners instead of port listeners.")
+		logger.Info("Listening on systemd activated listeners instead of port listeners.")
 		listeners, err := activation.Listeners()
 		if err != nil {
 			return err
@@ -258,9 +302,22 @@ func ListenAndServe(server *http.Server, flags *FlagConfig, logger log.Logger) e
 
 	listeners := make([]net.Listener, 0, len(*flags.WebListenAddresses))
 	for _, address := range *flags.WebListenAddresses {
-		listener, err := net.Listen("tcp", address)
-		if err != nil {
-			return err
+		var err error
+		var listener net.Listener
+		if strings.HasPrefix(address, "vsock://") {
+			port, err := parseVsockPort(address)
+			if err != nil {
+				return err
+			}
+			listener, err = vsock.Listen(port, nil)
+			if err != nil {
+				return err
+			}
+		} else {
+			listener, err = net.Listen("tcp", address)
+			if err != nil {
+				return err
+			}
 		}
 		defer listener.Close()
 		listeners = append(listeners, listener)
@@ -268,13 +325,29 @@ func ListenAndServe(server *http.Server, flags *FlagConfig, logger log.Logger) e
 	return ServeMultiple(listeners, server, flags, logger)
 }
 
+func parseVsockPort(address string) (uint32, error) {
+	uri, err := url.Parse(address)
+	if err != nil {
+		return 0, err
+	}
+	_, portStr, err := net.SplitHostPort(uri.Host)
+	if err != nil {
+		return 0, err
+	}
+	port, err := strconv.ParseUint(portStr, 10, 32)
+	if err != nil {
+		return 0, err
+	}
+	return uint32(port), nil
+}
+
 // Server starts the server on the given listener. Based on the file path
 // WebConfigFile in the FlagConfig, TLS or basic auth could be enabled.
-func Serve(l net.Listener, server *http.Server, flags *FlagConfig, logger log.Logger) error {
-	level.Info(logger).Log("msg", "Listening on", "address", l.Addr().String())
+func Serve(l net.Listener, server *http.Server, flags *FlagConfig, logger *slog.Logger) error {
+	logger.Info("Listening on", "address", l.Addr().String())
 	tlsConfigPath := *flags.WebConfigFile
 	if tlsConfigPath == "" {
-		level.Info(logger).Log("msg", "TLS is disabled.", "http2", false, "address", l.Addr().String())
+		logger.Info("TLS is disabled.", "http2", false, "address", l.Addr().String())
 		return server.Serve(l)
 	}
 
@@ -307,10 +380,10 @@ func Serve(l net.Listener, server *http.Server, flags *FlagConfig, logger log.Lo
 			server.TLSNextProto = make(map[string]func(*http.Server, *tls.Conn, http.Handler))
 		}
 		// Valid TLS config.
-		level.Info(logger).Log("msg", "TLS is enabled.", "http2", c.HTTPConfig.HTTP2, "address", l.Addr().String())
+		logger.Info("TLS is enabled.", "http2", c.HTTPConfig.HTTP2, "address", l.Addr().String())
 	case errNoTLSConfig:
 		// No TLS config, back to plain HTTP.
-		level.Info(logger).Log("msg", "TLS is disabled.", "http2", false, "address", l.Addr().String())
+		logger.Info("TLS is disabled.", "http2", false, "address", l.Addr().String())
 		return server.Serve(l)
 	default:
 		// Invalid TLS config.
@@ -438,6 +511,6 @@ func (tv *TLSVersion) MarshalYAML() (interface{}, error) {
 // tlsConfigPath, TLS or basic auth could be enabled.
 //
 // Deprecated: Use ListenAndServe instead.
-func Listen(server *http.Server, flags *FlagConfig, logger log.Logger) error {
+func Listen(server *http.Server, flags *FlagConfig, logger *slog.Logger) error {
 	return ListenAndServe(server, flags, logger)
 }

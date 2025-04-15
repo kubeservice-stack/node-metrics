@@ -18,9 +18,8 @@ package collector
 
 import (
 	"fmt"
+	"log/slog"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/kubeservice-stack/common/pkg/storage"
 	"github.com/kubeservice-stack/node-metrics/pkg/config"
 	"github.com/prometheus/client_golang/prometheus"
@@ -28,7 +27,7 @@ import (
 
 type BaseCollector struct {
 	metric map[string]*typedDesc
-	logger log.Logger
+	logger *slog.Logger
 }
 
 func init() {
@@ -36,7 +35,7 @@ func init() {
 }
 
 // NewBaseCollector returns a new Collector exposing base average stats.
-func NewBaseCollector(logger log.Logger) (Collector, error) {
+func NewBaseCollector(logger *slog.Logger) (Collector, error) {
 	return &BaseCollector{
 		metric: map[string]*typedDesc{
 			"cpu_usage_active":     {prometheus.NewDesc(namespace+"_cpu_usage_active", "cpu usage active.", nil, nil), prometheus.GaugeValue},
@@ -58,7 +57,7 @@ func (c *BaseCollector) Update(ch chan<- prometheus.Metric) error {
 		return fmt.Errorf("couldn't get load: %w", err)
 	}
 	for name, load := range loads {
-		level.Debug(c.logger).Log("msg", "return load", "index", name, "load", load)
+		c.logger.Debug("return load", "index", name, "load", load)
 		ch <- c.metric[name].mustNewConstMetric(load)
 	}
 	return err
