@@ -4,7 +4,6 @@ go 1.24.0
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
-	github.com/go-kit/log v0.2.1
 	github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973
 	github.com/kubeservice-stack/common v1.8.2
 	github.com/montanaflynn/stats v0.7.1
@@ -26,7 +25,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
-	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
