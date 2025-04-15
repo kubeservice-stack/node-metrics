@@ -9,7 +9,7 @@ require (
 	github.com/montanaflynn/stats v0.7.1
 	github.com/prometheus/client_golang v1.21.1
 	github.com/prometheus/common v0.62.0
-	github.com/prometheus/exporter-toolkit v0.13.2
+	github.com/prometheus/exporter-toolkit v0.14.0
 	github.com/prometheus/procfs v0.16.0
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
