@@ -8,7 +8,7 @@ require (
 	github.com/kubeservice-stack/common v1.8.3
 	github.com/montanaflynn/stats v0.7.1
 	github.com/prometheus/client_golang v1.22.0
-	github.com/prometheus/common v0.62.0
+	github.com/prometheus/common v0.63.0
 	github.com/prometheus/exporter-toolkit v0.14.0
 	github.com/prometheus/procfs v0.16.0
 	github.com/stretchr/testify v1.10.0
@@ -40,7 +40,7 @@ require (
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/crypto v0.35.0 // indirect
 	golang.org/x/net v0.36.0 // indirect
-	golang.org/x/oauth2 v0.24.0 // indirect
+	golang.org/x/oauth2 v0.25.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
