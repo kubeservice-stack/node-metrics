@@ -13,7 +13,7 @@ require (
 	github.com/prometheus/procfs v0.16.1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
-	golang.org/x/sys v0.32.0
+	golang.org/x/sys v0.33.0
 	howett.net/plist v1.0.1
 )
 
