@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973
-	github.com/kubeservice-stack/common v1.8.3
+	github.com/kubeservice-stack/common v1.9.0
 	github.com/montanaflynn/stats v0.7.1
 	github.com/prometheus/client_golang v1.22.0
 	github.com/prometheus/common v0.63.0
@@ -38,11 +38,11 @@ require (
 	github.com/xhit/go-str2duration/v2 v2.1.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/crypto v0.35.0 // indirect
-	golang.org/x/net v0.36.0 // indirect
+	golang.org/x/crypto v0.36.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
 	golang.org/x/oauth2 v0.25.0 // indirect
 	golang.org/x/sync v0.13.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
