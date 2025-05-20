@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973
-	github.com/kubeservice-stack/common v1.8.3
+	github.com/kubeservice-stack/common v1.9.1
 	github.com/montanaflynn/stats v0.7.1
 	github.com/prometheus/client_golang v1.22.0
 	github.com/prometheus/common v0.64.0
