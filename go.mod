@@ -10,7 +10,7 @@ require (
 	github.com/prometheus/client_golang v1.22.0
 	github.com/prometheus/common v0.65.0
 	github.com/prometheus/exporter-toolkit v0.14.0
-	github.com/prometheus/procfs v0.16.1
+	github.com/prometheus/procfs v0.17.0
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
 	golang.org/x/sys v0.33.0
@@ -41,7 +41,7 @@ require (
 	golang.org/x/crypto v0.38.0 // indirect
 	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/oauth2 v0.30.0 // indirect
-	golang.org/x/sync v0.14.0 // indirect
+	golang.org/x/sync v0.15.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
