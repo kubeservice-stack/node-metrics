@@ -94,7 +94,7 @@ github.com/prometheus/procfs/internal/util
 github.com/prometheus/procfs/sysfs
 # github.com/siebenmann/go-kstat v0.0.0-20210513183136-173c9b0a9973
 ## explicit
-# github.com/stretchr/testify v1.10.0
+# github.com/stretchr/testify v1.11.1
 ## explicit; go 1.17
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/assert/yaml
