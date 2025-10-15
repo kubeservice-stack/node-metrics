@@ -9,7 +9,7 @@ require (
 	github.com/montanaflynn/stats v0.7.1
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.1
-	github.com/prometheus/exporter-toolkit v0.14.0
+	github.com/prometheus/exporter-toolkit v0.14.1
 	github.com/prometheus/procfs v0.17.0
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
@@ -23,7 +23,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/caarlos0/env/v10 v10.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
+	github.com/coreos/go-systemd/v22 v22.6.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -46,6 +46,5 @@ require (
 	golang.org/x/text v0.29.0 // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
