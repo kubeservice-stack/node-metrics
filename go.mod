@@ -9,7 +9,7 @@ require (
 	github.com/montanaflynn/stats v0.7.1
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.1
-	github.com/prometheus/exporter-toolkit v0.14.1
+	github.com/prometheus/exporter-toolkit v0.15.0
 	github.com/prometheus/procfs v0.17.0
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
@@ -39,11 +39,12 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
-	golang.org/x/crypto v0.42.0 // indirect
-	golang.org/x/net v0.44.0 // indirect
+	golang.org/x/crypto v0.43.0 // indirect
+	golang.org/x/net v0.45.0 // indirect
 	golang.org/x/oauth2 v0.31.0 // indirect
 	golang.org/x/sync v0.17.0 // indirect
-	golang.org/x/text v0.29.0 // indirect
+	golang.org/x/text v0.30.0 // indirect
+	golang.org/x/time v0.13.0 // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
