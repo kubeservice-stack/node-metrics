@@ -1,6 +1,6 @@
 module github.com/kubeservice-stack/node-metrics
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
@@ -10,10 +10,10 @@ require (
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.5
 	github.com/prometheus/exporter-toolkit v0.15.1
-	github.com/prometheus/procfs v0.19.2
+	github.com/prometheus/procfs v0.20.0
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
-	golang.org/x/sys v0.40.0
+	golang.org/x/sys v0.41.0
 	howett.net/plist v1.0.1
 )
 
