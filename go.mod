@@ -5,7 +5,7 @@ go 1.26
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973
-	github.com/kubeservice-stack/common v1.9.1
+	github.com/kubeservice-stack/common v1.10.0
 	github.com/montanaflynn/stats v0.9.0
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.5
@@ -42,7 +42,7 @@ require (
 	go.uber.org/zap v1.27.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.4 // indirect
 	golang.org/x/crypto v0.49.0 // indirect
-	golang.org/x/net v0.51.0 // indirect
+	golang.org/x/net v0.52.0 // indirect
 	golang.org/x/oauth2 v0.34.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
 	golang.org/x/text v0.35.0 // indirect
