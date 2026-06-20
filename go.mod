@@ -8,7 +8,7 @@ require (
 	github.com/kubeservice-stack/common v1.9.1
 	github.com/montanaflynn/stats v0.9.0
 	github.com/prometheus/client_golang v1.23.2
-	github.com/prometheus/common v0.68.1
+	github.com/prometheus/common v0.69.0
 	github.com/prometheus/exporter-toolkit v0.16.0
 	github.com/prometheus/procfs v0.20.1
 	github.com/stretchr/testify v1.11.1
