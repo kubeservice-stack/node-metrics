@@ -7,7 +7,7 @@ require (
 	github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973
 	github.com/kubeservice-stack/common v1.9.1
 	github.com/montanaflynn/stats v0.12.2
-	github.com/prometheus/client_golang v1.23.2
+	github.com/prometheus/client_golang v1.24.0
 	github.com/prometheus/common v0.70.0
 	github.com/prometheus/exporter-toolkit v0.17.1
 	github.com/prometheus/procfs v0.21.1
